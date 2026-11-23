@@ -66,6 +66,12 @@
         "projectId": "9eff0fc0-7af1-4399-845b-992573dffc81"
       }
     },
-    "owner": "jasonburger"
+    "owner": "jasonburger",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/9eff0fc0-7af1-4399-845b-992573dffc81"
+    }
   }
 }
