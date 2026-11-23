@@ -62,6 +62,11 @@ export default function RootLayout() {
         <Stack.Screen name="modul/[moduleId]" options={{ title: 'Lernmodul' }} />
         <Stack.Screen name="credits" options={{ title: 'Credits' }} />
         <Stack.Screen name="plus" options={{ presentation: 'modal', headerShown: false, title: 'Livo Plus' }} />
+        <Stack.Screen name="beta" options={{ title: 'Beta-Labor' }} />
+        <Stack.Screen name="express" options={{ title: 'Express-Modus' }} />
+        <Stack.Screen name="spickzettel" options={{ title: 'Spickzettel' }} />
+        <Stack.Screen name="schilder" options={{ title: 'Schilder-Trainer' }} />
+        <Stack.Screen name="scanner" options={{ title: 'Scanner' }} />
       </Stack>
     </ThemeProvider>
   );

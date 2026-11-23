@@ -13,6 +13,17 @@ Mobile App (iOS, Android und Web) für die Vorbereitung auf die deutsche Führer
 | **Livia** | Chat mit Livia. Offline beantwortet sie Fragen aus der eingebauten Wissensbasis; mit dem optionalen [Livia-Server](server/README.md) antwortet sie per Claude. „Frag Livia“ im Quiz erklärt die gerade beantwortete Frage |
 | **Konto** | Profil, Prüfungstermin, Tagesziel, Credits (2 pro richtiger Antwort, einmal pro Frage) mit Prämienübersicht, Livo Plus, helles/dunkles Design, Statistik, Links zu mylivo.app |
 
+### Beta-Funktionen
+
+Neue Funktionen sind in der App mit einem **BETA**-Abzeichen gekennzeichnet und im **Beta-Labor** (Lernen → Beta-Labor) gesammelt:
+
+| Funktion | Was sie macht |
+| --- | --- |
+| **Express-Modus** | Crashkurs für die letzten 7 Tage vor der Prüfung: Tagesplan je nach verbleibenden Tagen, Express-Runden mit 20 Fragen (zuerst 5- und 4-Punkte-Fragen, die noch nicht sitzen, und offene Fehler), Spickzettel mit den wichtigsten Fakten und Tipps für den Prüfungstag. Erscheint automatisch auf dem Start-Screen, wenn der Prüfungstermin nah ist |
+| **Tages-Challenge** | Jeden Tag dieselben 5 Fragen für alle; mindestens 4 richtig bringen 10 Bonus-Credits – einmal pro Tag (wie auf mylivo.app/challenge) |
+| **Schilder-Trainer** | Verkehrszeichen als Karteikarten: Schild ansehen, umdrehen, Bedeutung merken; nicht gewusste Zeichen gezielt wiederholen |
+| **Livo Scanner** | Führerschein oder Lernkarte fotografieren. Die Texterkennung ([tesseract.js](https://github.com/naptha/tesseract.js), deutsches Sprachpaket) läuft direkt auf dem Gerät – in einer WebView bzw. im Browser. Das Foto wird weder hochgeladen noch gespeichert; beim ersten Scan werden einmalig ca. 6 MB Erkennungs-Software von cdn.jsdelivr.net geladen. Beim Führerschein liest Livo Name, Ablaufdatum (4b), Nummer (maskiert) und die Klassen (9) mit Erklärung; Lernkarten-Text lässt sich kopieren oder von Livia erklären lassen. Kein amtlicher Nachweis |
+
 Inhalt: 100 eigenständig formulierte Übungsfragen (Multiple Choice mit mehreren richtigen Antworten und Zahlenfragen), jede mit einer Erklärung von Livia, 21 als SVG gezeichnete Verkehrszeichen, 12 Lernmodule.
 
 Der Lernfortschritt wird lokal auf dem Gerät gespeichert (AsyncStorage).

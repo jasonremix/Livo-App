@@ -2,10 +2,12 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Button, Card, ProgressBar, ProgressRing, Row, Screen, SectionHeader, Txt, type IconName } from '@/components/ui';
+import { BetaBadge, Button, Card, ProgressBar, ProgressRing, Row, Screen, SectionHeader, Txt, type IconName } from '@/components/ui';
 import { ALL_MODULES, COURSES } from '@/data/courses';
 import { LIVIA_FAQ } from '@/data/livia-faq';
+import { CHALLENGE_BONUS, CHALLENGE_SIZE } from '@/lib/challenge';
 import { dayKey, daysBetween, parseDayKey, streak } from '@/lib/dates';
+import { daysUntilExam, isExpressTime } from '@/lib/express';
 import { sendToLivia } from '@/lib/livia-chat';
 import { mistakeIds } from '@/lib/srs';
 import { progressStats, readiness } from '@/lib/stats';
@@ -34,6 +36,7 @@ export default function Home() {
   const activity = useLivoStore((s) => s.activity);
   const credits = useLivoStore((s) => s.credits);
   const completed = useLivoStore((s) => s.completedModules);
+  const challenge = useLivoStore((s) => s.challenges[dayKey()]);
 
   const stats = progressStats(progress);
   const ready = readiness(progress, exams);
@@ -44,6 +47,8 @@ export default function Home() {
   const nextModule = ALL_MODULES.find((m) => !completed.includes(m.id));
   const nextCourse = nextModule ? COURSES.find((co) => co.id === nextModule.courseId) : undefined;
   const tip = tipOfTheDay();
+  const express = isExpressTime(profile.examDate);
+  const examDays = daysUntilExam(profile.examDate);
 
   const actions: { icon: IconName; label: string; sub: string; onPress: () => void; tint: string }[] = [
     {
@@ -94,7 +99,31 @@ export default function Home() {
         </Pressable>
       </Row>
 
-      <Card style={{ marginTop: Space.xl }}>
+      {express && (
+        <Card tone="primary" onPress={() => router.push('/express')} style={{ marginTop: Space.xl }} accessibilityLabel="Express-Modus öffnen">
+          <Row gap={Space.md}>
+            <Ionicons name="rocket" size={28} color={c.onPrimary} />
+            <View style={{ flex: 1 }}>
+              <Row gap={Space.sm}>
+                <Txt variant="bodyStrong" style={{ color: c.onPrimary }}>
+                  Express-Modus
+                </Txt>
+                <View style={[styles.betaOnRed, { backgroundColor: c.onPrimary }]}>
+                  <Txt style={{ fontFamily: Fonts.bodyExtra, fontSize: 10, letterSpacing: 0.8, color: c.primary }}>BETA</Txt>
+                </View>
+              </Row>
+              <Txt variant="small" style={{ color: c.onPrimary, opacity: 0.92 }}>
+                {examDays === 0
+                  ? 'Heute ist Prüfungstag – Spickzettel und Tipps für heute.'
+                  : `Noch ${examDays} ${examDays === 1 ? 'Tag' : 'Tage'}: dein Crashkurs mit Tagesplan.`}
+              </Txt>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={c.onPrimary} />
+          </Row>
+        </Card>
+      )}
+
+      <Card style={{ marginTop: express ? Space.md : Space.xl }}>
         <Row gap={Space.lg}>
           <ProgressRing value={ready / 100} size={112} color={ready >= 80 ? c.success : c.primary}>
             <Txt style={{ fontFamily: Fonts.display, fontSize: 24 }}>{ready}%</Txt>
@@ -172,6 +201,34 @@ export default function Home() {
         ))}
       </View>
 
+      <SectionHeader title="Tages-Challenge" action={<BetaBadge />} />
+      <Card onPress={() => router.push({ pathname: '/quiz', params: { mode: 'challenge' } })} accessibilityLabel="Tages-Challenge starten">
+        <Row gap={Space.md}>
+          <View style={[styles.courseIcon, { backgroundColor: c.warningSoft }]}>
+            <Ionicons name="trophy" size={22} color="#c79a00" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Txt variant="bodyStrong">
+              {challenge ? `Heute ${challenge.correct}/${challenge.total} richtig` : `${CHALLENGE_SIZE} Fragen von heute`}
+            </Txt>
+            <Txt variant="caption" color="textMuted">
+              {challenge?.rewarded
+                ? `+${CHALLENGE_BONUS} Bonus-Credits erhalten – morgen gibt es neue Fragen`
+                : `Mindestens 4 richtig = ${CHALLENGE_BONUS} Bonus-Credits`}
+            </Txt>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={c.textMuted} />
+        </Row>
+      </Card>
+      <Button
+        title="Alle Beta-Funktionen"
+        variant="ghost"
+        small
+        icon="flask-outline"
+        onPress={() => router.push('/beta')}
+        style={{ alignSelf: 'flex-start', marginTop: Space.xs }}
+      />
+
       {nextModule && nextCourse && (
         <>
           <SectionHeader title="Weiter im Kurs" />
@@ -228,4 +285,5 @@ const styles = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: Space.md },
   gridItem: { flexBasis: '47%', flexGrow: 1, minHeight: 112 },
   courseIcon: { width: 44, height: 44, borderRadius: Radius.md, alignItems: 'center', justifyContent: 'center' },
+  betaOnRed: { borderRadius: Radius.pill, paddingHorizontal: 6, paddingVertical: 1 },
 });

@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { Badge, Button, Card, Divider, ListRow, ProgressBar, Row, Screen, SectionHeader, Txt, type IconName } from '@/components/ui';
+import { Badge, BetaBadge, Button, Card, Divider, ListRow, ProgressBar, Row, Screen, SectionHeader, Txt, type IconName } from '@/components/ui';
 import { CATEGORIES } from '@/data/categories';
 import { COURSES } from '@/data/courses';
 import { mistakeIds } from '@/lib/srs';
@@ -64,6 +64,41 @@ export default function Learn() {
           subtitle={marked.length ? `${marked.length} Fragen gemerkt` : 'Markiere Fragen mit dem Lesezeichen'}
           onPress={() => router.push({ pathname: '/quiz', params: { mode: 'marked' } })}
           disabled={!marked.length}
+        />
+      </Card>
+
+      <SectionHeader title="Beta-Labor" action={<BetaBadge />} />
+      <Card style={{ paddingVertical: Space.xs }}>
+        <ListRow
+          icon="rocket-outline"
+          iconTint={c.primary}
+          title="Express-Modus"
+          subtitle="Crashkurs für die letzten Tage vor der Prüfung"
+          onPress={() => router.push('/express')}
+        />
+        <Divider />
+        <ListRow
+          icon="trophy-outline"
+          iconTint="#c79a00"
+          title="Tages-Challenge"
+          subtitle="5 Fragen pro Tag, 10 Bonus-Credits"
+          onPress={() => router.push({ pathname: '/quiz', params: { mode: 'challenge' } })}
+        />
+        <Divider />
+        <ListRow
+          icon="triangle-outline"
+          iconTint={c.tealText}
+          title="Schilder-Trainer"
+          subtitle="Verkehrszeichen mit Karteikarten"
+          onPress={() => router.push('/schilder')}
+        />
+        <Divider />
+        <ListRow
+          icon="scan-outline"
+          iconTint={c.successText}
+          title="Livo Scanner"
+          subtitle="Führerschein oder Lernkarte scannen"
+          onPress={() => router.push('/scanner')}
         />
       </Card>
 

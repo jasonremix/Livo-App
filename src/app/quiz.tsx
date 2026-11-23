@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { QuestionView } from '@/components/QuestionView';
 import {
+  BetaBadge,
   Button,
   Card,
   EmptyState,
@@ -18,6 +19,7 @@ import {
   Txt,
 } from '@/components/ui';
 import { QUESTION_BY_ID } from '@/data/questions';
+import { CHALLENGE_BONUS, CHALLENGE_PASS } from '@/lib/challenge';
 import { isAnswered, isCorrect, type UserAnswer } from '@/lib/grading';
 import { explainQuestion } from '@/lib/livia';
 import { sendToLivia } from '@/lib/livia-chat';
@@ -48,10 +50,14 @@ export default function Quiz() {
   const [earned, setEarned] = useState(0);
   const [lastEarned, setLastEarned] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [bonus, setBonus] = useState<number | null>(null);
 
   const recordAnswer = useLivoStore((s) => s.recordAnswer);
   const toggleMark = useLivoStore((s) => s.toggleMark);
   const completeModule = useLivoStore((s) => s.completeModule);
+  const completeChallenge = useLivoStore((s) => s.completeChallenge);
+  const recordExpressRound = useLivoStore((s) => s.recordExpressRound);
+  const isBeta = mode === 'express' || mode === 'challenge';
   const marked = useLivoStore((s) => s.marked);
 
   if (!session.ids.length) {
@@ -86,6 +92,8 @@ export default function Quiz() {
   const next = () => {
     if (index + 1 >= total) {
       if (mode === 'module' && params.id) completeModule(params.id);
+      if (mode === 'express') recordExpressRound();
+      if (mode === 'challenge') setBonus(completeChallenge(results.filter((r) => r.correct).length, total));
       setFinished(true);
       return;
     }
@@ -123,6 +131,28 @@ export default function Quiz() {
           )}
         </View>
 
+        {mode === 'challenge' && (
+          <Card tone={right >= CHALLENGE_PASS ? 'teal' : 'alt'} style={{ marginTop: Space.xl, gap: 4 }}>
+            <Row gap={Space.sm}>
+              <Ionicons name="trophy" size={20} color="#c79a00" />
+              <Txt variant="bodyStrong">
+                {bonus
+                  ? `Challenge geschafft: +${bonus} Bonus-Credits!`
+                  : right >= CHALLENGE_PASS
+                    ? 'Challenge geschafft!'
+                    : 'Diesmal knapp vorbei'}
+              </Txt>
+            </Row>
+            <Txt variant="small" color="textMuted">
+              {bonus
+                ? 'Morgen warten fünf neue Fragen auf dich.'
+                : right >= CHALLENGE_PASS
+                  ? `Die ${CHALLENGE_BONUS} Bonus-Credits für heute hast du schon erhalten. Morgen gibt es neue Fragen.`
+                  : `Mit mindestens ${CHALLENGE_PASS} richtigen Antworten gibt es ${CHALLENGE_BONUS} Bonus-Credits. Morgen gibt es neue Fragen.`}
+            </Txt>
+          </Card>
+        )}
+
         {wrong.length > 0 && (
           <Card style={{ marginTop: Space.xl, gap: Space.sm }}>
             <Txt variant="h3">Diese Fragen solltest du wiederholen</Txt>
@@ -145,12 +175,14 @@ export default function Quiz() {
               onPress={() => router.replace({ pathname: '/quiz', params: { mode: 'ids', id: wrong.join(',') } })}
             />
           )}
-          <Button
-            title="Neue Trainingsrunde"
-            variant={wrong.length ? 'secondary' : 'primary'}
-            icon="flash-outline"
-            onPress={() => router.replace({ pathname: '/quiz', params: { mode: 'training' } })}
-          />
+          {mode !== 'challenge' && (
+            <Button
+              title={mode === 'express' ? 'Neue Express-Runde' : 'Neue Trainingsrunde'}
+              variant={wrong.length ? 'secondary' : 'primary'}
+              icon="flash-outline"
+              onPress={() => router.replace({ pathname: '/quiz', params: { mode: mode === 'express' ? 'express' : 'training' } })}
+            />
+          )}
           <Button title="Fertig" variant="ghost" onPress={close} />
         </View>
       </Screen>
@@ -181,9 +213,12 @@ export default function Quiz() {
       <Row gap={Space.md}>
         <IconButton icon="close" label="Training beenden" onPress={close} />
         <View style={{ flex: 1, gap: 6 }}>
-          <Txt variant="caption" color="textMuted">
-            {session.title} · Frage {index + 1} von {total}
-          </Txt>
+          <Row gap={6}>
+            <Txt variant="caption" color="textMuted">
+              {session.title} · Frage {index + 1} von {total}
+            </Txt>
+            {isBeta && <BetaBadge small />}
+          </Row>
           <ProgressBar value={(index + (revealed ? 1 : 0)) / total} />
         </View>
         <IconButton

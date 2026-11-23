@@ -291,6 +291,18 @@ export function Badge({ label, tone = 'neutral' }: { label: string; tone?: 'neut
   );
 }
 
+/** Kennzeichnung für neue Funktionen, die noch getestet werden. */
+export function BetaBadge({ small }: { small?: boolean }) {
+  const { c } = useTheme();
+  return (
+    <View
+      accessibilityLabel="Beta-Funktion"
+      style={[styles.badge, { backgroundColor: c.text, paddingHorizontal: small ? 6 : 8, alignSelf: 'center' }]}>
+      <Text style={{ fontFamily: Fonts.bodyExtra, fontSize: small ? 10 : 11, letterSpacing: 0.8, color: c.bg }}>BETA</Text>
+    </View>
+  );
+}
+
 export function ListRow({
   icon,
   iconTint,

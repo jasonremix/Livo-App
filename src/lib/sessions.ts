@@ -3,9 +3,12 @@ import { findModule } from '@/data/courses';
 import { QUESTION_BY_ID, QUESTIONS } from '@/data/questions';
 import type { CategoryId } from '@/data/types';
 
+import { challengeQuestionIds } from './challenge';
+import { dayKey } from './dates';
+import { buildExpressQueue } from './express';
 import { buildTrainingQueue, mistakeIds, type QuestionProgress } from './srs';
 
-export type QuizMode = 'training' | 'category' | 'mistakes' | 'marked' | 'module' | 'ids';
+export type QuizMode = 'training' | 'category' | 'mistakes' | 'marked' | 'module' | 'ids' | 'express' | 'challenge';
 
 export interface QuizSession {
   title: string;
@@ -34,6 +37,10 @@ export function buildSession(
       const mod = param ? findModule(param) : undefined;
       return { title: mod ? `Quiz: ${mod.title}` : 'Quiz', ids: mod?.quiz ?? [] };
     }
+    case 'express':
+      return { title: 'Express-Runde', ids: buildExpressQueue(state.progress) };
+    case 'challenge':
+      return { title: 'Tages-Challenge', ids: challengeQuestionIds(dayKey()) };
     case 'ids':
       return {
         title: 'Übung',

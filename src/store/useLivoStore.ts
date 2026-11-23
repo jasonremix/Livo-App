@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { CREDITS_PER_CORRECT_ANSWER } from '@/data/rewards';
+import { CHALLENGE_BONUS, CHALLENGE_PASS } from '@/lib/challenge';
 import { dayKey } from '@/lib/dates';
 import type { ChatMessage } from '@/lib/livia-client';
 import { applyAnswer, type QuestionProgress } from '@/lib/srs';
@@ -31,6 +32,10 @@ interface PersistedState {
   isPlus: boolean;
   liviaUsage: { day: string; count: number };
   chat: ChatMessage[];
+  /** Beta: Express-Modus pro Tag */
+  expressLog: Record<string, { rounds: number; cheatSheet: boolean }>;
+  /** Beta: Tägliche Challenge pro Tag */
+  challenges: Record<string, { correct: number; total: number; rewarded: boolean }>;
 }
 
 interface Actions {
@@ -46,6 +51,10 @@ interface Actions {
   clearChat: () => void;
   /** Zählt eine KI-Nachricht an Livia; false, wenn das Tageslimit erreicht ist. */
   consumeLiviaMessage: (limit: number) => boolean;
+  recordExpressRound: () => void;
+  markCheatSheetSeen: () => void;
+  /** Speichert das Challenge-Ergebnis von heute; gibt die Bonus-Credits zurück (einmal pro Tag). */
+  completeChallenge: (correct: number, total: number) => number;
   resetProgress: () => void;
 }
 
@@ -69,6 +78,8 @@ export const initialState: PersistedState = {
   isPlus: false,
   liviaUsage: { day: '', count: 0 },
   chat: [],
+  expressLog: {},
+  challenges: {},
 };
 
 export const useLivoStore = create<LivoState>()(
@@ -125,6 +136,33 @@ export const useLivoStore = create<LivoState>()(
         return true;
       },
 
+      recordExpressRound: () =>
+        set((s) => {
+          const today = dayKey();
+          const entry = s.expressLog[today] ?? { rounds: 0, cheatSheet: false };
+          return { expressLog: { ...s.expressLog, [today]: { ...entry, rounds: entry.rounds + 1 } } };
+        }),
+
+      markCheatSheetSeen: () =>
+        set((s) => {
+          const today = dayKey();
+          const entry = s.expressLog[today] ?? { rounds: 0, cheatSheet: false };
+          return entry.cheatSheet ? s : { expressLog: { ...s.expressLog, [today]: { ...entry, cheatSheet: true } } };
+        }),
+
+      completeChallenge: (correct, total) => {
+        const s = get();
+        const today = dayKey();
+        const prev = s.challenges[today];
+        const bonus = !prev?.rewarded && correct >= CHALLENGE_PASS ? CHALLENGE_BONUS : 0;
+        const best = prev && prev.correct > correct ? prev : { correct, total, rewarded: false };
+        set({
+          challenges: { ...s.challenges, [today]: { ...best, rewarded: !!prev?.rewarded || bonus > 0 } },
+          credits: s.credits + bonus,
+        });
+        return bonus;
+      },
+
       resetProgress: () =>
         set({
           progress: {},
@@ -133,6 +171,7 @@ export const useLivoStore = create<LivoState>()(
           exams: [],
           completedModules: [],
           chat: [],
+          expressLog: {},
         }),
     }),
     {
@@ -152,6 +191,8 @@ export const useLivoStore = create<LivoState>()(
         isPlus: s.isPlus,
         liviaUsage: s.liviaUsage,
         chat: s.chat,
+        expressLog: s.expressLog,
+        challenges: s.challenges,
       }),
       onRehydrateStorage: () => () => {
         useLivoStore.setState({ hasHydrated: true });
