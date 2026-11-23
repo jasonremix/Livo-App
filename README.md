@@ -108,8 +108,8 @@ Die App ist mit EAS Update veröffentlicht und lässt sich in der kostenlosen Ap
 
 1. Expo Go aus dem App Store bzw. Play Store installieren.
 2. Den Link des Updates öffnen oder den QR-Code mit der Kamera scannen:
-   - iPhone: `exp://u.expo.dev/update/01a20ab7-85ea-7bd3-bece-16e1db44b42e`
-   - Android: `exp://u.expo.dev/update/01a20ab7-85ea-7e68-bf1d-9b77a0e9d5c3`
+   - iPhone (Version 1.1.0): `exp://u.expo.dev/update/01a20ad1-07b0-7791-ac1c-746f2fe235bd`
+   - Android (Version 1.1.0): `exp://u.expo.dev/update/01a20ad1-07b0-7fdf-a06f-e58558966bde`
    - Alle Updates mit QR-Codes: [expo.dev → livo → Updates](https://expo.dev/accounts/jasonburger/projects/livo/updates)
 
 Neue Version veröffentlichen (jedes Update bekommt eigene Links, die im Dashboard angezeigt werden):
