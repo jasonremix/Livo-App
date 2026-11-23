@@ -1,0 +1,17 @@
+{
+  "name": "livo-livia-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Livia-Backend für die Livo-App: leitet Chatfragen an die Claude API weiter.",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "start": "node livia-server.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.13.0"
+  }
+}

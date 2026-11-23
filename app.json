@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "Livo",
+    "slug": "livo",
+    "version": "1.0.0",
+    "description": "Vorbereitung auf die deutsche Führerschein-Theorieprüfung – Übungsfragen, Prüfungssimulation, Kurse und Erklärungen von Livia.",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "livo",
+    "userInterfaceStyle": "automatic",
+    "primaryColor": "#f5312c",
+    "ios": {
+      "bundleIdentifier": "app.mylivo.livo",
+      "supportsTablet": true,
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "app.mylivo.livo",
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "single",
+      "favicon": "./assets/images/favicon.png",
+      "name": "Livo – Theorieprüfung",
+      "shortName": "Livo",
+      "lang": "de",
+      "themeColor": "#f5312c",
+      "backgroundColor": "#ffffff"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#ffffff",
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 120,
+          "dark": {
+            "backgroundColor": "#060606",
+            "image": "./assets/images/splash-icon.png"
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

@@ -1,0 +1,25 @@
+import type { SignId } from './types';
+
+export const SIGN_NAMES: Record<SignId, string> = {
+  '101': 'Gefahrstelle (Zeichen 101)',
+  '201': 'Andreaskreuz (Zeichen 201)',
+  '205': 'Vorfahrt gewähren (Zeichen 205)',
+  '206': 'Halt. Vorfahrt gewähren (Zeichen 206)',
+  '209': 'Vorgeschriebene Fahrtrichtung rechts (Zeichen 209)',
+  '250': 'Verbot für Fahrzeuge aller Art (Zeichen 250)',
+  '267': 'Verbot der Einfahrt (Zeichen 267)',
+  '274-30': 'Zulässige Höchstgeschwindigkeit 30 km/h (Zeichen 274)',
+  '274-50': 'Zulässige Höchstgeschwindigkeit 50 km/h (Zeichen 274)',
+  '274-70': 'Zulässige Höchstgeschwindigkeit 70 km/h (Zeichen 274)',
+  '276': 'Überholverbot für Kraftfahrzeuge aller Art (Zeichen 276)',
+  '282': 'Ende sämtlicher Streckenverbote (Zeichen 282)',
+  '283': 'Absolutes Haltverbot (Zeichen 283)',
+  '286': 'Eingeschränktes Haltverbot (Zeichen 286)',
+  '301': 'Vorfahrt an der nächsten Kreuzung (Zeichen 301)',
+  '306': 'Vorfahrtstraße (Zeichen 306)',
+  '307': 'Ende der Vorfahrtstraße (Zeichen 307)',
+  '310': 'Ortstafel – Beginn der geschlossenen Ortschaft (Zeichen 310)',
+  '314': 'Parken (Zeichen 314)',
+  '357': 'Sackgasse (Zeichen 357)',
+  '380': 'Richtgeschwindigkeit (Zeichen 380)',
+};
