@@ -89,7 +89,25 @@ npx eas-cli@latest submit
 | `preview` | APK zum direkten Installieren auf Android-Geräten (interne Verteilung) |
 | `production` | Store-Builds, Versionsnummer zählt automatisch hoch |
 
-Der Android-Signaturschlüssel liegt verwaltet bei Expo. Für iOS braucht es zusätzlich ein Apple-Developer-Konto.
+Der Android-Signaturschlüssel liegt verwaltet bei Expo. Für iOS-Builds braucht es zusätzlich ein Apple-Developer-Konto.
+
+### Auf dem iPhone (und Android) ohne App-Store-Build: Expo Go
+
+Die App ist mit EAS Update veröffentlicht und lässt sich in der kostenlosen App **Expo Go** öffnen – ohne Apple-Developer-Konto:
+
+1. Expo Go aus dem App Store bzw. Play Store installieren.
+2. Den Link des Updates öffnen oder den QR-Code mit der Kamera scannen:
+   - iPhone: `exp://u.expo.dev/update/01a20ab7-85ea-7bd3-bece-16e1db44b42e`
+   - Android: `exp://u.expo.dev/update/01a20ab7-85ea-7e68-bf1d-9b77a0e9d5c3`
+   - Alle Updates mit QR-Codes: [expo.dev → livo → Updates](https://expo.dev/accounts/jasonburger/projects/livo/updates)
+
+Neue Version veröffentlichen (jedes Update bekommt eigene Links, die im Dashboard angezeigt werden):
+
+```bash
+npx eas-cli@latest update --branch preview --message "Was sich geändert hat"
+```
+
+Builds mit dem Kanal `preview` (z. B. die APK) laden solche Updates beim nächsten Start automatisch – sofern sie bereits `expo-updates` enthalten.
 
 Bundle-ID / Package: `app.mylivo.livo` (in `app.json` anpassbar).
 
