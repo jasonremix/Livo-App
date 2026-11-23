@@ -71,13 +71,25 @@ Ohne Livo Plus sind dann 10 KI-Nachrichten pro Tag frei. Ist der Server nicht er
 
 ## Builds für App Store und Google Play
 
-Die App nutzt Continuous Native Generation – die Ordner `ios/` und `android/` werden erzeugt, nicht eingecheckt. Gebaut wird mit EAS:
+Die App nutzt Continuous Native Generation – die Ordner `ios/` und `android/` werden erzeugt, nicht eingecheckt. Gebaut wird mit EAS in der Expo-Cloud. Das Projekt ist mit Expo verknüpft: [expo.dev/accounts/jasonburger/projects/livo](https://expo.dev/accounts/jasonburger/projects/livo) (Projekt-ID in `app.json`, Profile in `eas.json`).
 
 ```bash
 npx eas-cli@latest login
-npx eas-cli@latest build --platform all
+
+# Installierbare Android-App (APK) zum Testen – Download-Link/QR-Code auf expo.dev
+npx eas-cli@latest build --platform android --profile preview
+
+# Store-Builds (Android App Bundle / iOS) und Einreichung
+npx eas-cli@latest build --platform all --profile production
 npx eas-cli@latest submit
 ```
+
+| Profil | Ergebnis |
+| --- | --- |
+| `preview` | APK zum direkten Installieren auf Android-Geräten (interne Verteilung) |
+| `production` | Store-Builds, Versionsnummer zählt automatisch hoch |
+
+Der Android-Signaturschlüssel liegt verwaltet bei Expo. Für iOS braucht es zusätzlich ein Apple-Developer-Konto.
 
 Bundle-ID / Package: `app.mylivo.livo` (in `app.json` anpassbar).
 
